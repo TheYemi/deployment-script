@@ -2,3 +2,4 @@ Dockerfile
 *.log
 *.conf
 *.html
+nginx-deployment/
