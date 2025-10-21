@@ -31,7 +31,7 @@ fi
 
 # Setup EC2
 log "Installing Docker and Nginx on EC2..."
-ssh -i "$SSH_KEY" "$SSH_USER@$EC2_IP" << 'EOF'
+ssh -i "$SSH_KEY" -T "$SSH_USER@$EC2_IP" << 'EOF'
 # Update system
 sudo apt-get update -qq
 
@@ -55,10 +55,10 @@ EOF
 # Deploy container
 log "Deploying Docker container..."
 REMOTE_DIR="/home/$SSH_USER/$REPO_NAME"
-ssh -i "$SSH_KEY" "$SSH_USER@$EC2_IP" "mkdir -p $REMOTE_DIR"
+ssh -i "$SSH_KEY" -T "$SSH_USER@$EC2_IP" "mkdir -p $REMOTE_DIR"
 scp -i "$SSH_KEY" -r ./* "$SSH_USER@$EC2_IP:$REMOTE_DIR/" >> "$LOG_FILE" 2>&1
 
-ssh -i "$SSH_KEY" "$SSH_USER@$EC2_IP" << EOF
+ssh -i "$SSH_KEY" -T "$SSH_USER@$EC2_IP" << EOF
 cd $REMOTE_DIR
 docker stop $APP_NAME 2>/dev/null || true
 docker rm $APP_NAME 2>/dev/null || true
@@ -71,7 +71,7 @@ EOF
 
 # Configure Nginx reverse proxy
 log "Configuring Nginx reverse proxy..."
-ssh -i "$SSH_KEY" "$SSH_USER@$EC2_IP" bash << EOF
+ssh -i "$SSH_KEY" -T "$SSH_USER@$EC2_IP" bash << EOF
 # Create Nginx config
 sudo tee /etc/nginx/sites-available/$APP_NAME > /dev/null << 'NGINX'
 server {
@@ -106,7 +106,7 @@ EOF
 
 # Validate
 log "Testing deployment..."
-ssh -i "$SSH_KEY" "$SSH_USER@$EC2_IP" << 'EOF'
+ssh -i "$SSH_KEY" -T "$SSH_USER@$EC2_IP" << 'EOF'
 echo "=== Docker Status ==="
 docker ps
 
