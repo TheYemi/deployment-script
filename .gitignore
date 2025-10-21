@@ -1,7 +1,4 @@
 Dockerfile
-deploy_20251021_162708.log
-deploy_20251021_163339.log
-app.conf
-deploy_20251021_162406.log
-deploy_20251021_163313.log
-index.html
+*.log
+*.conf
+*.html
